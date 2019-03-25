@@ -1,4 +1,9 @@
 FROM php:7.2.6-fpm
 
-RUN docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install json
+RUN docker-php-ext-install mysqli \
+    && docker-php-ext-install json \
+    && docker-php-ext-enable mysqli
+
+EXPOSE 9000
+
+CMD ["php-fpm"]    
