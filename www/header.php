@@ -1,3 +1,8 @@
+<?php
+    @session_start();
+    include './class/student.php';
+    $student_obj = new Student();
+?>
 <!DOCTYPE html>
 <html lang="en" >
     <head>
@@ -9,11 +14,6 @@
 
     </head>
     <body >
-        <?php
-        include './class/student.php';
-        $student_obj = new Student();
-        ?>  
-
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -27,7 +27,12 @@
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
                           <li> <img src="./assets/images/ce.png" alt="CE" class="tlogo"> </li>
-                        <li class="active"><a href="index.php">Home</a></li>
+                          <?php if(isset($_SESSION['isLogin'])) { ?>
+                            <li class="active"><a href="Report.php">Report</a></li>
+                            <li class="active"><a href="index.php">Logout</a></li>
+                          <?php } else { ?>
+                            <li class="active"><a href="index.php">Home</a></li>
+                          <?php } ?>
                     </ul>
 
                 </div>

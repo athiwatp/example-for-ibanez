@@ -3,7 +3,7 @@ class Student
 {
     private $conn;
     function __construct() {
-    // session_start();
+    @session_start();
     $servername = "database";
     $dbname = "ibanez";
     $username = "root";
@@ -11,20 +11,22 @@ class Student
   
 
     // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+    mysqli_set_charset($conn,"utf8");
+
     // Check connection
       if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
        }else{
-        $this->conn=$conn;  
-       }
+        $this->conn=$conn;
+      }
 
     }
 
 
     public function student_list(){
         
-       $sql = "SELECT * FROM studentb ORDER BY idstd asc ";
+       $sql = "SELECT * FROM studentb ORDER BY idstd DESC ";
        $result=  $this->conn->query($sql);
        return $result;  
     }
@@ -32,21 +34,19 @@ class Student
     public function create_student_info($post_data=array()){
          
        if(isset($post_data['create_student'])){
-       $student_name= mysqli_real_escape_string($this->conn,trim($post_data['student_name']));
-       $email_address= mysqli_real_escape_string($this->conn,trim($post_data['email_address']));
-       $gender= mysqli_real_escape_string($this->conn,trim($post_data['gender']));
-       $contact= mysqli_real_escape_string($this->conn,trim($post_data['contact']));
-       $country= mysqli_real_escape_string($this->conn,trim($post_data['country']));
+       $student_name= mysqli_real_escape_string($this->conn,trim($post_data['name']));
+       $student_lastname= mysqli_real_escape_string($this->conn,trim($post_data['lastname']));
+       $email_address= mysqli_real_escape_string($this->conn,trim($post_data['email']));
+       $tel= mysqli_real_escape_string($this->conn,trim($post_data['telephone']));
 
-       $sql="INSERT INTO students (student_name, email_address, contact,country,gender) VALUES ('$student_name', '$email_address', '$contact','$country','$gender')";
+       $sql="INSERT INTO studentb (name,lastname,email,number) VALUES ('$student_name', '$student_lastname', '$email_address','$tel')";
         
         $result=  $this->conn->query($sql);
         
            if($result){
            
                $_SESSION['message']="Successfully Created Student Info";
-               
-              header('Location: index.php');
+             
            }
           
        unset($post_data['create_student']);
@@ -59,7 +59,7 @@ class Student
        if(isset($id)){
        $student_id= mysqli_real_escape_string($this->conn,trim($id));
       
-       $sql="Select * from students where student_id='$student_id'";
+       $sql="SELECT * FROM studentb WHERE idstd='$student_id'";
         
        $result=  $this->conn->query($sql);
      
@@ -67,24 +67,45 @@ class Student
     
        }  
     }
-    
+
+    public function login($post_data=array()){
+      if(isset($post_data)){
+         $setUsername= mysqli_real_escape_string($this->conn,trim($post_data['username']));
+         $setPassword= mysqli_real_escape_string($this->conn,trim($post_data['password']));
+     
+         $sql="SELECT * FROM registertb WHERE gname='$setUsername' AND passwd='$setPassword'";
+       
+         $result = $this->conn->query($sql);
+         
+         if ($result) {
+            $checkLogin = $result->num_rows;
+            if($checkLogin > 0) {
+               $_SESSION['isLogin'] = true;
+            } else {
+               $_SESSION['message']="Username or Password Wrong";
+            }
+         }
+
+      }  
+   }
     
     public function update_student_info($post_data=array()){
        if(isset($post_data['update_student'])&& isset($post_data['id'])){
            
-       $student_name= mysqli_real_escape_string($this->conn,trim($post_data['student_name']));
-       $email_address= mysqli_real_escape_string($this->conn,trim($post_data['email_address']));
-       $gender= mysqli_real_escape_string($this->conn,trim($post_data['gender']));
-       $contact= mysqli_real_escape_string($this->conn,trim($post_data['contact']));
-       $country= mysqli_real_escape_string($this->conn,trim($post_data['country']));
+       $student_name= mysqli_real_escape_string($this->conn,trim($post_data['name']));
+       $student_lastname= mysqli_real_escape_string($this->conn,trim($post_data['lastname']));
+       $email_address= mysqli_real_escape_string($this->conn,trim($post_data['email']));
+       $tel= mysqli_real_escape_string($this->conn,trim($post_data['telephone']));
        $student_id= mysqli_real_escape_string($this->conn,trim($post_data['id']));
 
-       $sql="UPDATE students SET student_name='$student_name',email_address='$email_address',contact='$contact',country='$country',gender='$gender' WHERE student_id =$student_id";
+       $sql="UPDATE studentb SET name='$student_name',email='$email_address',lastname='$student_lastname',number='$tel' WHERE idstd =$student_id";
      
         $result=  $this->conn->query($sql);
         
            if($result){
                $_SESSION['message']="Successfully Updated Student Info";
+           } else {
+            $_SESSION['message']="Unsuccessfully Updated Student Info";
            }
        unset($post_data['update_student']);
        }   
@@ -95,7 +116,7 @@ class Student
        if(isset($id)){
        $student_id= mysqli_real_escape_string($this->conn,trim($id));
 
-       $sql="DELETE FROM  students  WHERE student_id =$student_id";
+       $sql="DELETE FROM  studentb  WHERE idstd =$student_id";
         $result=  $this->conn->query($sql);
         
            if($result){
@@ -103,7 +124,7 @@ class Student
             
            }
        }
-         header('Location: index.php'); 
+         @header('Location: index.php'); 
     }
     function __destruct() {
       mysqli_close($this->conn);  
