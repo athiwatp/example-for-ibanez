@@ -23,8 +23,8 @@ services:
     image: mysql:5.7
     restart: unless-stopped
     volumes:
-      - ./mysql/initdb/:/docker-entrypoint-initdb.d
-      - ./dbdata/data:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/initdb/dev57.sql:/docker-entrypoint-initdb.d/dev57.sql
     environment:
       - "MYSQL_DATABASE=ibanez"
       - "MYSQL_USER=root"

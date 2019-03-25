@@ -52,7 +52,7 @@ INSERT INTO `registertb` (`idregis`, `gname`, `passwd`, `fname`, `date`) VALUES
 
 CREATE TABLE `studentb` (
   `idstd` int(3) NOT NULL COMMENT 'ลำดับ',
-  `ืname` varchar(20) NOT NULL COMMENT 'ชื่อ',
+  `name` varchar(20) NOT NULL COMMENT 'ชื่อ',
   `lastname` varchar(20) NOT NULL COMMENT 'นามสกุล',
   `email` varchar(30) NOT NULL COMMENT 'จดหมายอิเล็กทรอนิกส์',
   `number` int(20) UNSIGNED NOT NULL COMMENT 'โทรศัพท์',
@@ -63,7 +63,7 @@ CREATE TABLE `studentb` (
 -- Dumping data for table `studentb`
 --
 
-INSERT INTO `studentb` (`idstd`, `ืname`, `lastname`, `email`, `number`, `date`) VALUES
+INSERT INTO `studentb` (`idstd`, `name`, `lastname`, `email`, `number`, `date`) VALUES
 (1, 'สรพงษ์', 'ชาตรี', 'user1@hotmail.com', 26286601, '2019-03-10 07:31:19'),
 (2, 'จารุณี', 'สุขสวัสดิ์', 'user2@hotmail.com', 26286602, '2019-03-10 07:31:19');
 
